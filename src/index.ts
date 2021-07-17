@@ -70,7 +70,7 @@ export class App {
     public head(path: string, handler: RouteHandler) {
         this.handle('head', path, handler);
     }
-    
+
     public listen(done?: (options: { host: string; port: number; }) => void) {
         this.#app.listen(this.host, this.port, socket => {
             // Save this socket for graceful closing
@@ -111,7 +111,7 @@ export class App {
                     if (res.calledNext) return;
 
                     // Mark send as being used
-                    res.didCallSend = true;
+                    res.calledSend = true;
 
                     // Process string
                     if (typeof body === 'string') {
@@ -139,7 +139,7 @@ export class App {
                 const body = await Promise.resolve(handler.bind(handler)(request, response, next));
 
                 // Bail as the response has already been sent using res.send
-                if (res.didCallSend) return;
+                if (res.calledSend) return;
 
                 // Bail as the body is empty
                 if (!body) return;

@@ -1,0 +1,24 @@
+diff --git a/node_modules/uWebSockets.js/index.d.ts b/node_modules/uWebSockets.js/index.d.ts
+index fc3f393..8414238 100644
+--- a/node_modules/uWebSockets.js/index.d.ts
++++ b/node_modules/uWebSockets.js/index.d.ts
+@@ -117,9 +117,6 @@ export interface WebSocket {
+ 
+     /** Returns the remote IP address as text. See RecognizedString. */
+     getRemoteAddressAsText() : ArrayBuffer;
+-
+-    /** Arbitrary user data may be attached to this object. In C++ this is done by using getUserData(). */
+-    [key: string]: any;
+ }
+ 
+ /** An HttpResponse is valid until either onAborted callback or any of the .end/.tryEnd calls succeed. You may attach user data to this object. */
+@@ -200,9 +197,6 @@ export interface HttpResponse {
+ 
+     /** Upgrades a HttpResponse to a WebSocket. See UpgradeAsync, UpgradeSync example files. */
+     upgrade<T>(userData : T, secWebSocketKey: RecognizedString, secWebSocketProtocol: RecognizedString, secWebSocketExtensions: RecognizedString, context: us_socket_context_t) : void;
+-
+-    /** Arbitrary user data may be attached to this object */
+-    [key: string]: any;
+ }
+ 
+ /** An HttpRequest is stack allocated and only accessible during the callback invocation. */
