@@ -2,6 +2,27 @@ import ava, { TestInterface } from 'ava';
 import fetch, { FetchError } from 'node-fetch';
 import { App } from '../src';
 
+declare module "uWebSockets.js" {
+    interface HttpResponse {
+        /**
+         * Has the underlying request been aborted?
+         */
+        aborted?: boolean;
+        /**
+         * Has the response been sent?
+         */
+        done?: boolean;
+        /**
+         * Has next() been called?
+         */
+        calledNext?: boolean;
+        /**
+         * Has res.send() been called yet?
+         */
+        calledSend?: boolean;
+    }
+}
+
 const test = ava as TestInterface<{
     app: App
 }>;
@@ -358,4 +379,22 @@ test('returning next()', async t => {
     const response = await fetch(`http://localhost:${app.port}/`, { method: 'GET' });
     t.is(response.status, 200);
     t.is(await response.text(), 'Hello World!');
+});
+
+test('body parsing echo', async t => {
+    const app = t.context.app;
+
+    // Add GET route
+    app.post('/', async (req, res, next) => {
+        const postBody = await req.body();
+        return postBody.toString();
+    });
+
+    // Start app
+    app.listen();
+
+    const body = JSON.stringify({ test: 123 });
+    const response = await fetch(`http://localhost:${app.port}/`, { method: 'POST', body });
+    t.is(response.status, 200);
+    t.is(await response.text(), body);
 });
